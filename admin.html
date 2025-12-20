@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>관리자 — INFO BOOTH</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container admin-container">
+  <div class="admin-header">
+    <div>
+      <div class="admin-title">관리자</div>
+      <div style="color:var(--muted);font-size:0.95rem">학번·이름으로 검색하고 남은 횟수를 관리하세요</div>
+    </div>
+    <div class="search-bar">
+      <input id="adminQuery" placeholder="학번 또는 이름으로 검색">
+      <button id="adminSearch" class="btn-primary">검색</button>
+    </div>
+  </div>
+
+  <div class="results-grid">
+    <div id="results"></div>
+    <div id="detail"></div>
+  </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

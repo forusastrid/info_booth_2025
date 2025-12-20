@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>부스 키오스크</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 20%;"></div>
+    </div>
+
+    <div class="step active" id="step1">
+        <h1>INFO BOOTH</h1>
+        <h2>전화번호를 입력해주세요</h2>
+        <div class="input-group">
+            <label for="phone">전화번호</label>
+            <input type="tel" id="phone" placeholder="010-1234-5678" maxlength="13">
+            <div class="error-message" id="phoneError">올바른 전화번호를 입력해주세요</div>
+        </div>
+        <div class="button-group">
+            <button class="btn-primary" onclick="nextStep(2)">다음</button>
+        </div>
+    </div>
+
+    <div class="step" id="step2">
+        <h1>INFO BOOTH</h1>
+        <h2>이름을 입력해주세요</h2>
+        <div class="input-group">
+            <label for="name">이름</label>
+            <input type="text" id="name" placeholder="홍길동" maxlength="20">
+            <div class="error-message" id="nameError">이름을 입력해주세요</div>
+        </div>
+        <div class="input-group">
+            <label for="studentNumber">학번 (5자리)</label>
+            <input type="text" id="studentNumber" placeholder="12345" maxlength="5" inputmode="numeric">
+            <div class="error-message" id="studentNumberError">학번은 숫자 5자리여야 합니다</div>
+        </div>
+        <div class="button-group">
+            <button class="btn-secondary" onclick="prevStep(1)">이전</button>
+            <button class="btn-primary" onclick="nextStep(3)">다음</button>
+        </div>
+    </div>
+
+    <div class="step" id="step3">
+        <h1>INFO BOOTH</h1>
+        <h2>참여할 부스를 선택해주세요 (중복 선택 가능)</h2>
+        <div class="booth-selection-header">
+            <div class="selected-count">
+                선택된 부스: <span class="number" id="selectedCount">0</span>개
+            </div>
+        </div>
+        <div class="booth-grid" id="boothGrid"></div>
+        <div class="selected-booths-list" id="selectedBoothsList">
+            <h3>INFO BOOTH</h3>
+            <div id="selectedBoothsDisplay"></div>
+        </div>
+        <div class="error-message" id="boothError">최소 1개 이상의 부스를 선택해주세요</div>
+        <div class="button-group">
+            <button class="btn-secondary" onclick="prevStep(2)">이전</button>
+            <button class="btn-primary" onclick="nextStep(4)">다음</button>
+        </div>
+    </div>
+
+    <div class="step" id="step4">
+        <h1>INFO BOOTH</h1>
+        <h2>입력 정보를 확인해주세요</h2>
+        <div class="confirmation-info">
+            <div class="info-row">
+                <span class="info-label">전화번호</span>
+                <span class="info-value" id="confirmPhone"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">이름</span>
+                <span class="info-value" id="confirmName"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">학번</span>
+                <span class="info-value" id="confirmStudentNumber"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">선택한 부스</span>
+                <span class="info-value booth-list" id="confirmBooth"></span>
+            </div>
+        </div>
+        <div class="total-price">
+            <div class="total-price-label">총 결제 금액</div>
+            <div class="total-price-value" id="totalPrice">0원</div>
+        </div>
+        <div class="button-group">
+            <button class="btn-secondary" onclick="prevStep(3)">이전</button>
+            <button class="btn-primary" onclick="submitForm()">확인</button>
+        </div>
+    </div>
+
+    <div class="step" id="step5">
+        <div class="success-message">
+            <div class="success-icon">✓</div>
+            <h1>등록이 완료되었습니다!</h1>
+            <h2>감사합니다</h2>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
