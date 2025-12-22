@@ -5,7 +5,13 @@ import os
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)  # CORS 허용
+# Configure CORS: allow all by default (dev), or restrict via ALLOWED_ORIGINS env var (comma-separated)
+allowed = os.getenv('ALLOWED_ORIGINS')
+if allowed:
+    origins = [o.strip() for o in allowed.split(',') if o.strip()]
+    CORS(app, resources={r"/api/*": {"origins": origins}})
+else:
+    CORS(app)  # CORS 허용 (development)
 
 # 데이터베이스 파일 경로
 DB_PATH = 'student.db'
@@ -73,15 +79,35 @@ def init_db():
     conn.close()
     print('데이터베이스 초기화 완료')
 
-# 앱 시작 시 초기화 (gunicorn에서도 동작하도록 설정)
-@app.before_first_request
-def _init_on_start():
+# 데이터베이스 초기화: import 시 또는 프로덕션(wsgi)에서도 안전하게 실행
+try:
     init_db()
+except Exception as e:
+    print('데이터베이스 초기화 중 오류:', e)
 
 # 정적 파일 제공 (HTML 파일)
 @app.route('/')
 def index():
     return send_from_directory('.', 'index.html')
+
+# --- Admin auth helper ---
+import functools
+from flask import g
+
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
+
+def require_admin(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # If no ADMIN_PASSWORD is set, allow access (backwards compatible)
+        if not ADMIN_PASSWORD:
+            return func(*args, **kwargs)
+        # Check header
+        req_pw = request.headers.get('X-ADMIN-PASSWORD') or request.args.get('admin_password')
+        if not req_pw or req_pw != ADMIN_PASSWORD:
+            return jsonify({'success': False, 'message': '관리자 권한이 필요합니다.'}), 401
+        return func(*args, **kwargs)
+    return wrapper
 
 @app.route('/<path:path>')
 def static_files(path):
@@ -255,11 +281,23 @@ def get_students():
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             if student_number:
+                # public lookup by student_number does not require admin
                 cursor.execute('SELECT * FROM students WHERE student_number = ? ORDER BY created_at DESC', (student_number,))
             elif search:
+                # searching by name or listing requires admin
+                # enforce admin auth
+                admin_check = request.headers.get('X-ADMIN-PASSWORD') or request.args.get('admin_password')
+                if ADMIN_PASSWORD and admin_check != ADMIN_PASSWORD:
+                    conn.close()
+                    return jsonify({'success': False, 'message': '관리자 권한이 필요합니다.'}), 401
                 like = f"%{search}%"
                 cursor.execute('SELECT * FROM students WHERE name LIKE ? OR student_number LIKE ? ORDER BY created_at DESC', (like, like))
             else:
+                # listing all - admin only
+                admin_check = request.headers.get('X-ADMIN-PASSWORD') or request.args.get('admin_password')
+                if ADMIN_PASSWORD and admin_check != ADMIN_PASSWORD:
+                    conn.close()
+                    return jsonify({'success': False, 'message': '관리자 권한이 필요합니다.'}), 401
                 cursor.execute('SELECT * FROM students ORDER BY created_at DESC')
             rows = cursor.fetchall()
             for row in rows:
@@ -322,6 +360,7 @@ def get_students():
 
 # 단일 학생 레코드 조회
 @app.route('/api/students/<int:student_id>', methods=['GET'])
+@require_admin
 def get_student(student_id):
     try:
         conn, engine = get_conn()
@@ -381,6 +420,7 @@ def get_student(student_id):
 
 # 부스 남은 횟수 조정 API
 @app.route('/api/students/<int:student_id>/adjust', methods=['POST'])
+@require_admin
 def adjust_student_booth(student_id):
     try:
         data = request.json
@@ -445,6 +485,7 @@ def adjust_student_booth(student_id):
 
 # 결제 금액 추가 API
 @app.route('/api/students/<int:student_id>/add-payment', methods=['POST'])
+@require_admin
 def add_payment(student_id):
     try:
         data = request.json
@@ -487,6 +528,7 @@ def add_payment(student_id):
 
 # 학생 레코드 삭제 API
 @app.route('/api/students/<int:student_id>', methods=['DELETE'])
+@require_admin
 def delete_student(student_id):
     try:
         conn, engine = get_conn()
@@ -514,14 +556,19 @@ def delete_student(student_id):
 if __name__ == '__main__':
     # 데이터베이스 초기화
     init_db()
-    
+
+    # 플랫폼(예: Railway, Render)이 제공하는 PORT 사용
+    PORT = int(os.getenv('PORT', '5000'))
+    DEBUG = os.getenv('FLASK_DEBUG', 'False').lower() in ('1','true','yes')
+
     print('=' * 50)
     print('부스 키오스크 서버 시작')
     print('=' * 50)
-    print(f'서버 주소: http://localhost:5500')
+    print(f'서버 주소: http://localhost:{PORT}')
     print('브라우저에서 위 주소로 접속하세요.')
     print('서버를 종료하려면 Ctrl+C를 누르세요.')
     print('=' * 50)
-    
+
     # 서버 실행
-    app.run(host='0.0.0.0', port=5500, debug=True)
+    app.run(host='0.0.0.0', port=PORT, debug=DEBUG)
+ 
