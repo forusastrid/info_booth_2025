@@ -12,6 +12,9 @@ const booths = [
   { number: 7, name: 'SUPER INFOPASS (인포 모든 부스 우선 이용권) + (1구 키캡 키링 증정) [1인]', price: 10000 }
 ];
 
+// Optional API base: set window.API_BASE = 'https://api.midnightsky.kro.kr' in index.html to use a hosted API
+const API_BASE = (window.API_BASE || '').replace(/\/$/, '');
+
 // 숫자에 천단위 콤마 추가
 function formatPrice(price) {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -255,7 +258,7 @@ async function submitForm() {
 
   // Python 서버로 데이터 전송
   try {
-    const response = await fetch('http://localhost:5500/api/save-student', {
+    const response = await fetch(`${API_BASE || ''}/api/save-student`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', },
       body: JSON.stringify({ phone: formData.phone, name: formData.name, student_number: formData.student_number, booths: formData.booths, totalPrice: totalPrice })
