@@ -1,7 +1,7 @@
 :root{
   --bg-0: #030409;
   --bg-1: #07101a;
-  --neon-1: #dadee0;
+  --neon-1: #4aa1cc;
   --neon-2: #0066ff;
   --accent: #00ffd1;
   --muted: #9aa6b2;
@@ -130,7 +130,7 @@ button:active::before { width: 300px; height: 300px; }
 .booth-row .name{font-weight:700}
 .booth-row .remain{color:#00ff88;font-weight:800}
 .booth-row.gold{border:1px solid rgba(255,180,40,0.12);background:rgba(255,246,214,0.03);box-shadow:none}
-.booth-row .remain.gold{background:#FFD166;color:#3b1f00;padding:6px 10px;border-radius:8px;font-weight:900}
+.booth-row .remain.gold{background:#FFD166;color:#ffffff;padding:6px 10px;border-radius:8px;font-weight:900}
 .btn-inc{background:#00ffd1;border:none;padding:8px 10px;border-radius:8px}
 .btn-dec{background:#ff7a7a;border:none;padding:8px 10px;border-radius:8px}
 .pay-area{display:flex;gap:8px;align-items:center;margin-top:12px}
@@ -146,7 +146,7 @@ button:active::before { width: 300px; height: 300px; }
 .ticket-card .row:last-child{border-bottom:none}
 .ticket-booth{display:flex;flex-direction:column;gap:8px;margin-top:10px}
 .ticket-booth .item{padding:10px;border-radius:10px;background:rgba(255,255,255,0.015);display:flex;justify-content:space-between;align-items:center}
-.ticket-booth .item.gold{border:1px solid rgba(255,180,40,0.12);background:rgba(255,246,214,0.03);color:#3b1f00}
+.ticket-booth .item.gold{border:1px solid rgba(255, 255, 255, 0.12);background:rgba(255,246,214,0.03);color:#3b1f00}
 .ticket-actions{display:flex;gap:10px;margin-top:12px;justify-content:space-between}
 .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px;border-radius:10px}
 
