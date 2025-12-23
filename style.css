@@ -156,3 +156,19 @@ button:active::before { width: 300px; height: 300px; }
   .ticket-title{font-size:1.3rem}
   .ticket-card{padding:12px}
 }
+
+.admin-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header {
+  flex-shrink: 0;
+}
+
+.results-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 12px;
+}
