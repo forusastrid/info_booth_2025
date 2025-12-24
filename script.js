@@ -3,13 +3,13 @@ let formData = { phone: '', name: '', booths: [] };
 
 // 부스 목록 (실제 부스명으로 변경 가능)
 const booths = [
-  { number: 1, name: '인포이즘 (INFOISM) [1인]', price: 3000 },
+  { number: 1, name: '인포이즘 (INFOISM) [1인]', price: 2000 },
   { number: 2, name: '인포픽 (INFOPICK) [2회]', price: 1000 },
   { number: 3, name: '미니 게임 테라피 (MINI GAME THERAPY) [3회]', price: 2000 },
-  { number: 4, name: '타자 게임 (TYPING GAME) [1회]', price: 2000 },
-  { number: 5, name: 'INFOISM SUPERPASS (인포이즘 우선 이용권) [1인]', price: 5000 },
-  { number: 6, name: 'INFOPASS (인포 모든 부스 이용권) + (1구 키캡 키링 증정) [1인]', price: 8000 },
-  { number: 7, name: 'SUPER INFOPASS (인포 모든 부스 우선 이용권) + (1구 키캡 키링 증정) [1인]', price: 10000 }
+  { number: 4, name: '타자 게임 (TYPING GAME) [1회]', price: 1000 },
+  { number: 5, name: 'INFOISM SUPERPASS (인포이즘 우선 이용권) [1인]', price: 4000 },
+  { number: 6, name: 'INFOPASS (인포 모든 부스 이용권) + (1구 키캡 키링 증정) [1인]', price: 6000 },
+  { number: 7, name: 'SUPER INFOPASS (인포 모든 부스 우선 이용권) + (1구 키캡 키링 증정) [1인]', price: 8000 }
 ];
 
 // Optional API base: set window.API_BASE = 'https://api.midnightsky.kro.kr' in index.html to use a hosted API
@@ -304,3 +304,4 @@ function resetForm() {
 
 // 초기화
 createBoothCards();
+
